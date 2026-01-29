@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerala Bio-Circular Carbon Dashboard 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a1628;
+            --bg-secondary: #0f2137;
+            --bg-card: rgba(15, 33, 55, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --accent-primary: #10b981;
+            --accent-secondary: #34d399;
+            --accent-tertiary: #6ee7b7;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-info: #3b82f6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --glow-primary: rgba(16, 185, 129, 0.4);
+            --glow-warning: rgba(245, 158, 11, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #1a365d 100%);
+            color: var(--text-primary);
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 380px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-glass);
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-glass);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .logo {
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 10px var(--glow-primary));
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            box-shadow: 0 4px 15px var(--glow-primary);
+        }
+
+        .card-icon.warning {
+            background: linear-gradient(135deg, var(--accent-warning), #fbbf24);
+            box-shadow: 0 4px 15px var(--glow-warning);
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .card-value {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .card-value.negative {
+            background: linear-gradient(135deg, var(--accent-danger), #f87171);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Date Control */
+        .date-display {
+            text-align: center;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .date-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .day-counter {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 4px 20px var(--glow-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-primary);
+        }
+
+        .btn-secondary {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Range Slider */
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--bg-glass);
+            border-radius: 3px;
+            margin: 12px 0;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            cursor: pointer;
+            box-shadow: 0 2px 10px var(--glow-primary);
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .speed-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 100px;
+        }
+
+        #speedDisplay {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            min-width: 30px;
+        }
+
+        /* Gauge */
+        .gauge-container {
+            margin-top: 12px;
+        }
+
+        .gauge-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            border-radius: 5px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .gauge-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .gauge-fill.warning {
+            background: linear-gradient(90deg, var(--accent-warning), #fbbf24);
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        .gauge-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-item {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.02);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-info);
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Carbon Breakdown */
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .breakdown-icon {
+            font-size: 14px;
+        }
+
+        .breakdown-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .breakdown-value.positive {
+            color: var(--accent-primary);
+        }
+
+        .breakdown-value.negative {
+            color: var(--accent-danger);
+        }
+
+        /* Legend */
+        .legend {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .legend-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .legend-item:hover {
+            color: var(--text-primary);
+            padding-left: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Mini Chart */
+        .mini-chart {
+            margin-top: 12px;
+        }
+
+        .mini-chart-title {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mini-chart-bars {
+            display: flex;
+            align-items: flex-end;
+            height: 50px;
+            gap: 3px;
+        }
+
+        .mini-chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: 3px 3px 0 0;
+            min-height: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mini-chart-bar:hover {
+            filter: brightness(1.2);
+            transform: scaleY(1.05);
+            transform-origin: bottom;
+        }
+
+        /* Main Map Area */
+        .main-map {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map-canvas {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 40% 30%, #1a365d 0%, var(--bg-primary) 70%);
+        }
+
+        /* Map Overlay */
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 20px;
+            min-width: 220px;
+        }
+
+        .map-overlay-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        .map-overlay-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .map-overlay-stat:last-child {
+            border-bottom: none;
+        }
+
+        .map-overlay-stat span:first-child {
+            color: var(--text-muted);
+        }
+
+        .map-overlay-stat span:last-child {
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            max-width: 200px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 6px;
+        }
+
+        .tooltip-content {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-glass);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* STP Cards */
+        .stp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .stp-item {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stp-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .stp-name {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .stp-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-warning);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px;
+            border-radius: 14px;
+            margin-bottom: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 4px 15px var(--glow-primary);
+        }
+
+        .tab-btn-icon {
+            font-size: 18px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .section-header-icon {
+            font-size: 20px;
+            filter: drop-shadow(0 0 8px var(--glow-primary));
+        }
+
+        .section-header-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Enhanced Cards with clear borders */
+        .card-enhanced {
+            background: var(--bg-glass);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+        }
+
+        .card-enhanced:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
+        }
+
+        .card-enhanced.warning::before {
+            background: linear-gradient(90deg, var(--accent-warning), #fbbf24);
+        }
+
+        .card-enhanced.warning {
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .card-enhanced.warning:hover {
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 0 10px 40px rgba(245, 158, 11, 0.15);
+        }
+
+        .card-enhanced.info::before {
+            background: linear-gradient(90deg, var(--accent-info), #60a5fa);
+        }
+
+        .card-enhanced.info {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .card-enhanced.info:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 340px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+            }
+
+            .main-map {
+                height: 50vh;
+            }
+
+            .tab-btn {
+                padding: 10px 6px;
+                font-size: 10px;
+            }
+
+            .tab-btn-icon {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Dashboard Data...</div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="header">
+                <div class="logo">🌱</div>
+                <h1>Kerala Bio-Circular Carbon Dashboard</h1>
+                <div class="subtitle">Real-time Biosolid Logistics & Carbon Tracking • 2025</div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="switchTab('controls')">
+                    <span class="tab-btn-icon">🎮</span>
+                    Controls
+                </button>
+                <button class="tab-btn" onclick="switchTab('metrics')">
+                    <span class="tab-btn-icon">📊</span>
+                    Metrics
+                </button>
+                <button class="tab-btn" onclick="switchTab('carbon')">
+                    <span class="tab-btn-icon">🌿</span>
+                    Carbon
+                </button>
+                <button class="tab-btn" onclick="switchTab('storage')">
+                    <span class="tab-btn-icon">🏭</span>
+                    Storage
+                </button>
+            </div>
+
+            <!-- Controls Tab -->
+            <div class="tab-content active" id="tab-controls">
+                <div class="section-header">
+                    <span class="section-header-icon">🎮</span>
+                    <span class="section-header-text">Simulation Controls</span>
+                </div>
+                <div class="card-enhanced">
+                    <div class="date-display">
+                        <div class="date-text" id="currentDate">January 1, 2025</div>
+                        <div class="day-counter">Day <span id="dayNumber">1</span> of 365</div>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="btn-primary" onclick="togglePlayPause()" id="playBtn">▶ Play</button>
+                        <button class="btn-secondary" onclick="resetSimulation()">↻ Reset</button>
+                    </div>
+                    <input type="range" id="dateSlider" min="0" max="364" value="0" oninput="updateDate(this.value)">
+                    <div class="speed-control">
+                        <span class="speed-label">Animation Speed</span>
+                        <input type="range" id="speedSlider" min="1" max="10" value="3" style="flex:1"
+                            oninput="updateSpeed(this.value)">
+                        <span id="speedDisplay">3x</span>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-title">🗺️ Map Legend</div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: linear-gradient(135deg, #f97316, #ea580c);"></div>
+                        <span>Sewage Treatment Plants (4)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
+                        <span>Active Farms (<span id="farmCount">250</span>)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #475569;"></div>
+                        <span>Rain Locked Farms</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color"
+                            style="background: linear-gradient(135deg, #3b82f6, #60a5fa); border-radius: 2px;"></div>
+                        <span>Delivery Trucks</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Tab -->
+            <div class="tab-content" id="tab-metrics">
+                <div class="section-header">
+                    <span class="section-header-icon">📊</span>
+                    <span class="section-header-text">Performance Metrics</span>
+                </div>
+                <div class="card-enhanced">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <div class="card-title">Net Carbon Credit Score</div>
+                    </div>
+                    <div class="card-value" id="netScore">0 kg</div>
+                    <div class="gauge-container">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" id="scoreGauge" style="width: 0%"></div>
+                        </div>
+                        <div class="gauge-labels">
+                            <span>0</span>
+                            <span id="gaugePercent">0%</span>
+                            <span>50M kg</span>
+                        </div>
+                    </div>
+                    <div class="mini-chart">
+                        <div class="mini-chart-title">Weekly Trend</div>
+                        <div class="mini-chart-bars" id="trendChart"></div>
+                    </div>
+                </div>
+
+                <div class="card-enhanced info">
+                    <div class="card-header">
+                        <div class="card-icon"
+                            style="background: linear-gradient(135deg, var(--accent-info), #60a5fa); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                            📈</div>
+                        <div class="card-title">Delivery Statistics</div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="deliveryCount">0</div>
+                            <div class="stat-label">Deliveries Today</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalDelivered">0</div>
+                            <div class="stat-label">Total Tons</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="activeFarms">0</div>
+                            <div class="stat-label">Active Farms</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avgDelivery">0</div>
+                            <div class="stat-label">Avg Tons/Day</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carbon Tab -->
+            <div class="tab-content" id="tab-carbon">
+                <div class="section-header">
+                    <span class="section-header-icon">🌿</span>
+                    <span class="section-header-text">Carbon Impact Analysis</span>
+                </div>
+                <div class="card-enhanced">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">Carbon Impact Breakdown</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">
+                            <span class="breakdown-icon">✓</span>
+                            Synthetic Fertilizer Offset
+                        </div>
+                        <div class="breakdown-value positive" id="syntheticCredit">+0</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">
+                            <span class="breakdown-icon">✓</span>
+                            Soil Carbon Sequestration
+                        </div>
+                        <div class="breakdown-value positive" id="soilCredit">+0</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">
+                            <span class="breakdown-icon">✗</span>
+                            Transport Emissions
+                        </div>
+                        <div class="breakdown-value negative" id="transportCost">-0</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">
+                            <span class="breakdown-icon">✗</span>
+                            Nitrogen Leaching
+                        </div>
+                        <div class="breakdown-value negative" id="leachingCost">-0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Storage Tab -->
+            <div class="tab-content" id="tab-storage">
+                <div class="section-header">
+                    <span class="section-header-icon">🏭</span>
+                    <span class="section-header-text">STP Storage Status</span>
+                </div>
+                <div class="card-enhanced warning">
+                    <div class="card-header">
+                        <div class="card-icon warning">🏭</div>
+                        <div class="card-title">Total Storage Capacity</div>
+                    </div>
+                    <div class="card-value" id="stpStorage"
+                        style="font-size: 28px; background: linear-gradient(135deg, var(--accent-warning), #fbbf24); -webkit-background-clip: text; background-clip: text;">
+                        0 t</div>
+                    <div class="gauge-container">
+                        <div class="gauge-bar">
+                            <div class="gauge-fill warning" id="storageGauge" style="width: 0%"></div>
+                        </div>
+                        <div class="gauge-labels">
+                            <span>Empty</span>
+                            <span id="storagePercent">0%</span>
+                            <span>Full</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-enhanced warning">
+                    <div class="card-header">
+                        <div class="card-icon warning">📍</div>
+                        <div class="card-title">Individual STP Status</div>
+                    </div>
+                    <div class="stp-grid">
+                        <div class="stp-item">
+                            <div class="stp-name">Kochi</div>
+                            <div class="stp-value" id="stpKCH">0t</div>
+                        </div>
+                        <div class="stp-item">
+                            <div class="stp-name">Guruvayur</div>
+                            <div class="stp-value" id="stpGVR">0t</div>
+                        </div>
+                        <div class="stp-item">
+                            <div class="stp-name">Trivandrum</div>
+                            <div class="stp-value" id="stpTVM">0t</div>
+                        </div>
+                        <div class="stp-item">
+                            <div class="stp-name">Kozhikode</div>
+                            <div class="stp-value" id="stpKKD">0t</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-map">
+            <canvas id="map-canvas"></canvas>
+            <div class="map-overlay">
+                <div class="map-overlay-title">
+                    <div class="live-dot"></div>
+                    Live Statistics
+                </div>
+                <div class="map-overlay-stat">
+                    <span>Active Trucks</span>
+                    <span id="activeTrucks">0</span>
+                </div>
+                <div class="map-overlay-stat">
+                    <span>Today's Volume</span>
+                    <span id="todayVolume">0 tons</span>
+                </div>
+                <div class="map-overlay-stat">
+                    <span>Avg Distance</span>
+                    <span id="avgDistance">0 km</span>
+                </div>
+                <div class="map-overlay-stat">
+                    <span>Data Source</span>
+                    <span id="dataSource">CSV</span>
+                </div>
+            </div>
+            <div class="tooltip" id="tooltip">
+                <div class="tooltip-title"></div>
+                <div class="tooltip-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching function
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            event.currentTarget.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // Canvas setup
+        const canvas = document.getElementById('map-canvas');
+        const ctx = canvas.getContext('2d');
+        let isPlaying = false;
+        let currentDay = 0;
+        let animationSpeed = 3;
+        let playInterval = null;
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+            canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            canvas.style.width = canvas.offsetWidth + 'px';
+            canvas.style.height = canvas.offsetHeight + 'px';
+        }
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            drawMap();
+        });
+
+        // STPs with actual Kerala coordinates
+        const stps = {
+            'STP_KCH': { id: 'STP_KCH', name: 'Kochi', lat: 9.9312, lon: 76.2673, storage: 0, maxStorage: 60, color: '#f97316' },
+            'STP_GVR': { id: 'STP_GVR', name: 'Guruvayur', lat: 10.5925, lon: 76.0515, storage: 0, maxStorage: 50, color: '#fb923c' },
+            'STP_TVM': { id: 'STP_TVM', name: 'Trivandrum', lat: 8.5241, lon: 76.9366, storage: 0, maxStorage: 55, color: '#fdba74' },
+            'STP_KKD': { id: 'STP_KKD', name: 'Kozhikode', lat: 11.2588, lon: 75.7804, storage: 0, maxStorage: 45, color: '#fed7aa' }
+        };
+
+        // Generate 250 farms with pseudo-random but consistent positions
+        const farms = {};
+        function seededRandom(seed) {
+            const x = Math.sin(seed) * 10000;
+            return x - Math.floor(x);
+        }
+
+        for (let i = 1000; i < 1250; i++) {
+            const seed = i * 12345;
+            const zone = i % 3;
+            let lat, lon;
+
+            if (zone === 0) { // North
+                lat = 11.0 + seededRandom(seed) * 2.0;
+                lon = 75.3 + seededRandom(seed + 1) * 1.2;
+            } else if (zone === 1) { // Central
+                lat = 9.5 + seededRandom(seed) * 1.5;
+                lon = 76.0 + seededRandom(seed + 1) * 1.0;
+            } else { // South
+                lat = 8.3 + seededRandom(seed) * 1.2;
+                lon = 76.5 + seededRandom(seed + 1) * 1.0;
+            }
+
+            farms[`F_${i}`] = {
+                id: `F_${i}`,
+                lat: lat,
+                lon: lon,
+                zone: ['North', 'Central', 'South'][zone],
+                area: 2 + seededRandom(seed + 2) * 8
+            };
+        }
+
+        // CSV Data storage
+        let csvData = {};
+        let dailyAggregates = {};
+        let trucks = [];
+
+        // Parse embedded CSV data
+        const csvContent = `CSV_DATA_PLACEHOLDER`;
+
+        // Final metrics from summary_metrics.json (year-end values)
+        let finalMetrics = {
+            net_carbon_credit_score: 945271.3188277902,
+            synthetic_offset: 1206099.0207907043,
+            soil_sequestration: 5474999.999999998,
+            transport_emissions: 1543404.442597788,
+            nitrogen_leaching: 4192423.2593651246,
+            delivered_tons: 27374.999999999996
+        };
+
+        // Load CSV and JSON metrics from files
+        async function loadCSVData() {
+            // Try to load summary_metrics.json first
+            try {
+                const metricsResponse = await fetch('summary_metrics.json');
+                if (metricsResponse.ok) {
+                    const metricsData = await metricsResponse.json();
+                    finalMetrics = {
+                        net_carbon_credit_score: metricsData.net_carbon_credit_score || finalMetrics.net_carbon_credit_score,
+                        synthetic_offset: metricsData.synthetic_offset || finalMetrics.synthetic_offset,
+                        soil_sequestration: metricsData.soil_sequestration || finalMetrics.soil_sequestration,
+                        transport_emissions: metricsData.transport_emissions || finalMetrics.transport_emissions,
+                        nitrogen_leaching: metricsData.nitrogen_leaching || finalMetrics.nitrogen_leaching,
+                        delivered_tons: metricsData.delivered_tons || finalMetrics.delivered_tons
+                    };
+                    console.log('Loaded summary_metrics.json:', finalMetrics);
+                }
+            } catch (error) {
+                console.log('Using default final metrics');
+            }
+
+            // Load CSV data
+            try {
+                const response = await fetch('submission (1).csv');
+                if (!response.ok) throw new Error('CSV not found');
+                const text = await response.text();
+                parseCSV(text);
+            } catch (error) {
+                console.log('Loading CSV from fetch failed, using generated data');
+                generateSampleData();
+            }
+            hideLoading();
+            initializeDashboard();
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            csvData = {};
+            dailyAggregates = {};
+
+            // First pass: collect all deliveries by date
+            for (let i = 1; i < lines.length; i++) {
+                const parts = lines[i].split(',');
+                if (parts.length < 5) continue;
+
+                const date = parts[1].trim();
+                const stpId = parts[2].trim();
+                const farmId = parts[3].trim();
+                const tons = parseFloat(parts[4]) || 0;
+
+                if (!csvData[date]) {
+                    csvData[date] = [];
+                }
+
+                if (tons > 0) {
+                    csvData[date].push({ stpId, farmId, tons });
+                }
+            }
+
+            // Pre-calculate daily aggregates using finalMetrics scaled by progress
+            const dates = Object.keys(csvData).sort();
+            const totalDays = dates.length || 365;
+
+            dates.forEach((date, dayIndex) => {
+                const deliveries = csvData[date] || [];
+                let dayTons = 0;
+                const activeFarmsSet = new Set();
+                let totalDistance = 0;
+
+                deliveries.forEach(d => {
+                    dayTons += d.tons;
+                    activeFarmsSet.add(d.farmId);
+
+                    const farm = farms[d.farmId];
+                    const stp = stps[d.stpId];
+                    if (farm && stp) {
+                        const distance = haversine(stp.lat, stp.lon, farm.lat, farm.lon);
+                        totalDistance += distance;
+                    }
+                });
+
+                // Calculate progress through the year (0 to 1)
+                const progress = (dayIndex + 1) / totalDays;
+
+                // Scale cumulative values from finalMetrics based on progress
+                const cumTons = finalMetrics.delivered_tons * progress;
+                const cumSynthetic = finalMetrics.synthetic_offset * progress;
+                const cumSoil = finalMetrics.soil_sequestration * progress;
+                const cumTransport = finalMetrics.transport_emissions * progress;
+                const cumLeaching = finalMetrics.nitrogen_leaching * progress;
+                const score = finalMetrics.net_carbon_credit_score * progress;
+
+                dailyAggregates[dayIndex] = {
+                    date: date,
+                    deliveries: deliveries,
+                    dayTons: dayTons,
+                    cumTons: cumTons,
+                    activeFarms: activeFarmsSet.size,
+                    avgDistance: deliveries.length > 0 ? totalDistance / deliveries.length : 0,
+                    synthetic: cumSynthetic,
+                    soil: cumSoil,
+                    transport: cumTransport,
+                    leaching: cumLeaching,
+                    score: score
+                };
+            });
+
+            document.getElementById('dataSource').textContent = 'CSV + JSON';
+            console.log(`Loaded ${Object.keys(csvData).length} days of data with final metrics from JSON`);
+        }
+
+        function generateSampleData() {
+            dailyAggregates = {};
+
+            for (let day = 0; day < 365; day++) {
+                const date = new Date(2025, 0, day + 1);
+                const dateStr = date.toISOString().split('T')[0];
+                const deliveries = [];
+                let dayTons = 0;
+                const activeFarmsSet = new Set();
+                let totalDistance = 0;
+
+                // Generate random deliveries for visualization purposes
+                const numDeliveries = Math.floor(seededRandom(day * 100) * 30) + 10;
+                const stpKeys = Object.keys(stps);
+                const farmKeys = Object.keys(farms);
+
+                for (let i = 0; i < numDeliveries; i++) {
+                    const stpId = stpKeys[Math.floor(seededRandom(day * 100 + i) * stpKeys.length)];
+                    const farmId = farmKeys[Math.floor(seededRandom(day * 100 + i + 50) * farmKeys.length)];
+                    const tons = seededRandom(day * 100 + i + 100) * 2 + 0.1;
+
+                    deliveries.push({ stpId, farmId, tons });
+                    dayTons += tons;
+                    activeFarmsSet.add(farmId);
+
+                    const farm = farms[farmId];
+                    const stp = stps[stpId];
+                    const distance = haversine(stp.lat, stp.lon, farm.lat, farm.lon);
+                    totalDistance += distance;
+                }
+
+                // Calculate progress through the year (0 to 1)
+                const progress = (day + 1) / 365;
+
+                // Scale cumulative values from finalMetrics based on progress
+                csvData[dateStr] = deliveries;
+                dailyAggregates[day] = {
+                    date: dateStr,
+                    deliveries: deliveries,
+                    dayTons: dayTons,
+                    cumTons: finalMetrics.delivered_tons * progress,
+                    activeFarms: activeFarmsSet.size,
+                    avgDistance: deliveries.length > 0 ? totalDistance / deliveries.length : 0,
+                    synthetic: finalMetrics.synthetic_offset * progress,
+                    soil: finalMetrics.soil_sequestration * progress,
+                    transport: finalMetrics.transport_emissions * progress,
+                    leaching: finalMetrics.nitrogen_leaching * progress,
+                    score: finalMetrics.net_carbon_credit_score * progress
+                };
+            }
+
+            document.getElementById('dataSource').textContent = 'Generated + JSON';
+        }
+
+        function haversine(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function latLonToXY(lat, lon) {
+            const minLat = 8.0, maxLat = 13.0;
+            const minLon = 74.8, maxLon = 77.8;
+            const padding = 60;
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+
+            const x = padding + ((lon - minLon) / (maxLon - minLon)) * (width - 2 * padding);
+            const y = height - padding - ((lat - minLat) / (maxLat - minLat)) * (height - 2 * padding);
+
+            return { x, y };
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        function initializeDashboard() {
+            resizeCanvas();
+            initTrendChart();
+            updateDate(0);
+            drawMap();
+            requestAnimationFrame(animate);
+        }
+
+        function initTrendChart() {
+            const container = document.getElementById('trendChart');
+            container.innerHTML = '';
+            for (let i = 0; i < 14; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'mini-chart-bar';
+                bar.style.height = '4px';
+                container.appendChild(bar);
+            }
+        }
+
+        function updateTrendChart() {
+            const bars = document.querySelectorAll('.mini-chart-bar');
+            const startDay = Math.max(0, currentDay - 13);
+
+            let maxScore = 1;
+            for (let i = 0; i < 14; i++) {
+                const day = startDay + i;
+                if (dailyAggregates[day]) {
+                    const dayScore = dailyAggregates[day].dayTons * 200;
+                    maxScore = Math.max(maxScore, dayScore);
+                }
+            }
+
+            bars.forEach((bar, i) => {
+                const day = startDay + i;
+                if (dailyAggregates[day] && day <= currentDay) {
+                    const height = Math.max(4, (dailyAggregates[day].dayTons * 200 / maxScore) * 50);
+                    bar.style.height = height + 'px';
+                    bar.style.opacity = day === currentDay ? '1' : '0.7';
+                } else {
+                    bar.style.height = '4px';
+                    bar.style.opacity = '0.3';
+                }
+            });
+        }
+
+        function drawMap() {
+            const width = canvas.offsetWidth;
+            const height = canvas.offsetHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Kerala outline (simplified)
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const keralaPoints = [
+                [75.0, 12.5], [76.5, 12.0], [77.3, 11.5],
+                [77.5, 10.0], [77.0, 8.5], [76.5, 8.3],
+                [75.5, 9.0], [75.2, 10.5], [75.0, 12.5]
+            ];
+            keralaPoints.forEach((point, i) => {
+                const pos = latLonToXY(point[1], point[0]);
+                if (i === 0) ctx.moveTo(pos.x, pos.y);
+                else ctx.lineTo(pos.x, pos.y);
+            });
+            ctx.stroke();
+
+            // Get current day deliveries
+            const dayData = dailyAggregates[currentDay];
+            const activeDeliveries = dayData ? dayData.deliveries : [];
+            const activeFarmIds = new Set(activeDeliveries.map(d => d.farmId));
+
+            // Draw delivery lines
+            activeDeliveries.forEach(delivery => {
+                const stp = stps[delivery.stpId];
+                const farm = farms[delivery.farmId];
+                if (!stp || !farm) return;
+
+                const stpPos = latLonToXY(stp.lat, stp.lon);
+                const farmPos = latLonToXY(farm.lat, farm.lon);
+
+                const gradient = ctx.createLinearGradient(stpPos.x, stpPos.y, farmPos.x, farmPos.y);
+                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
+                gradient.addColorStop(1, 'rgba(59, 130, 246, 0.1)');
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = Math.min(3, delivery.tons + 0.5);
+                ctx.beginPath();
+                ctx.moveTo(stpPos.x, stpPos.y);
+                ctx.lineTo(farmPos.x, farmPos.y);
+                ctx.stroke();
+            });
+
+            // Draw farms
+            Object.values(farms).forEach(farm => {
+                const pos = latLonToXY(farm.lat, farm.lon);
+                const isActive = activeFarmIds.has(farm.id);
+
+                if (isActive) {
+                    // Glow effect for active farms
+                    const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 10);
+                    glow.addColorStop(0, 'rgba(16, 185, 129, 0.5)');
+                    glow.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                    ctx.fillStyle = glow;
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = isActive ? '#10b981' : '#475569';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, isActive ? 4 : 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw STPs
+            Object.values(stps).forEach(stp => {
+                const pos = latLonToXY(stp.lat, stp.lon);
+
+                // Outer glow
+                const glow = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 25);
+                glow.addColorStop(0, 'rgba(249, 115, 22, 0.4)');
+                glow.addColorStop(1, 'rgba(249, 115, 22, 0)');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Storage ring
+                const storagePercent = stp.storage / stp.maxStorage;
+                ctx.strokeStyle = storagePercent > 0.8 ? '#ef4444' : '#f97316';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 12, -Math.PI / 2, -Math.PI / 2 + storagePercent * Math.PI * 2);
+                ctx.stroke();
+
+                // Main circle
+                ctx.fillStyle = stp.color;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, 9, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Inner highlight
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.beginPath();
+                ctx.arc(pos.x - 2, pos.y - 2, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Label
+                ctx.fillStyle = '#f1f5f9';
+                ctx.font = 'bold 11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(stp.name, pos.x, pos.y - 20);
+            });
+
+            // Draw trucks
+            trucks.forEach(truck => {
+                if (truck.progress >= 1) return;
+
+                ctx.save();
+                const angle = Math.atan2(truck.targetY - truck.startY, truck.targetX - truck.startX);
+                ctx.translate(truck.x, truck.y);
+                ctx.rotate(angle);
+
+                // Truck glow
+                ctx.shadowColor = 'rgba(59, 130, 246, 0.6)';
+                ctx.shadowBlur = 15;
+
+                // Truck body
+                ctx.fillStyle = '#3b82f6';
+                ctx.fillRect(-10, -4, 14, 8);
+
+                // Cab
+                ctx.fillStyle = '#2563eb';
+                ctx.fillRect(4, -3, 6, 6);
+
+                // Wheels
+                ctx.fillStyle = '#1e293b';
+                ctx.beginPath();
+                ctx.arc(-6, 4, 2, 0, Math.PI * 2);
+                ctx.arc(2, 4, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            });
+        }
+
+        function updateTrucks() {
+            const dayData = dailyAggregates[currentDay];
+            if (!dayData) return;
+
+            // Initialize trucks for current frame
+            if (trucks.length === 0 && dayData.deliveries.length > 0) {
+                trucks = dayData.deliveries.slice(0, 20).map((delivery, i) => {
+                    const stp = stps[delivery.stpId];
+                    const farm = farms[delivery.farmId];
+                    if (!stp || !farm) return null;
+
+                    const stpPos = latLonToXY(stp.lat, stp.lon);
+                    const farmPos = latLonToXY(farm.lat, farm.lon);
+
+                    return {
+                        x: stpPos.x,
+                        y: stpPos.y,
+                        startX: stpPos.x,
+                        startY: stpPos.y,
+                        targetX: farmPos.x,
+                        targetY: farmPos.y,
+                        progress: i * 0.05,
+                        speed: 0.003 + Math.random() * 0.002
+                    };
+                }).filter(t => t !== null);
+            }
+
+            // Update truck positions
+            trucks.forEach(truck => {
+                truck.progress += truck.speed * animationSpeed;
+                if (truck.progress > 1) truck.progress = 1;
+
+                // Easing function for smooth movement
+                const ease = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+                const t = ease(truck.progress);
+
+                truck.x = truck.startX + (truck.targetX - truck.startX) * t;
+                truck.y = truck.startY + (truck.targetY - truck.startY) * t;
+            });
+
+            document.getElementById('activeTrucks').textContent = trucks.filter(t => t.progress < 1).length;
+        }
+
+        function updateMetrics() {
+            const dayData = dailyAggregates[currentDay];
+            if (!dayData) return;
+
+            // Update STP storage simulation
+            Object.values(stps).forEach(stp => {
+                stp.storage = stp.maxStorage * (0.3 + Math.sin(currentDay / 30) * 0.3 + Math.random() * 0.2);
+            });
+
+            // Main metrics
+            document.getElementById('netScore').textContent = formatNumber(Math.round(dayData.score)) + ' kg';
+            document.getElementById('deliveryCount').textContent = dayData.deliveries.length;
+            document.getElementById('totalDelivered').textContent = formatNumber(Math.round(dayData.cumTons));
+            document.getElementById('activeFarms').textContent = dayData.activeFarms;
+            document.getElementById('avgDelivery').textContent = (dayData.cumTons / (currentDay + 1)).toFixed(1);
+
+            // Carbon breakdown
+            document.getElementById('syntheticCredit').textContent = '+' + formatNumber(Math.round(dayData.synthetic));
+            document.getElementById('soilCredit').textContent = '+' + formatNumber(Math.round(dayData.soil));
+            document.getElementById('transportCost').textContent = '-' + formatNumber(Math.round(dayData.transport));
+            document.getElementById('leachingCost').textContent = '-' + formatNumber(Math.round(dayData.leaching));
+
+            // Gauges
+            const maxScore = 50000000;
+            const scorePercent = Math.min(100, (dayData.score / maxScore) * 100);
+            document.getElementById('scoreGauge').style.width = scorePercent + '%';
+            document.getElementById('gaugePercent').textContent = scorePercent.toFixed(1) + '%';
+
+            // STP storage
+            const totalStorage = Object.values(stps).reduce((sum, stp) => sum + stp.storage, 0);
+            const maxStorage = Object.values(stps).reduce((sum, stp) => sum + stp.maxStorage, 0);
+            const storagePercent = (totalStorage / maxStorage) * 100;
+
+            document.getElementById('stpStorage').textContent = Math.round(totalStorage) + ' t';
+            document.getElementById('storageGauge').style.width = storagePercent + '%';
+            document.getElementById('storagePercent').textContent = storagePercent.toFixed(0) + '%';
+
+            // Individual STP values
+            document.getElementById('stpKCH').textContent = Math.round(stps['STP_KCH'].storage) + 't';
+            document.getElementById('stpGVR').textContent = Math.round(stps['STP_GVR'].storage) + 't';
+            document.getElementById('stpTVM').textContent = Math.round(stps['STP_TVM'].storage) + 't';
+            document.getElementById('stpKKD').textContent = Math.round(stps['STP_KKD'].storage) + 't';
+
+            // Map overlay
+            document.getElementById('todayVolume').textContent = dayData.dayTons.toFixed(1) + ' tons';
+            document.getElementById('avgDistance').textContent = dayData.avgDistance.toFixed(1) + ' km';
+
+            updateTrendChart();
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function updateDate(day) {
+            currentDay = parseInt(day);
+            const date = new Date(2025, 0, currentDay + 1);
+
+            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById('dayNumber').textContent = currentDay + 1;
+            document.getElementById('dateSlider').value = currentDay;
+
+            trucks = [];
+            updateMetrics();
+            drawMap();
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').textContent = isPlaying ? '⏸ Pause' : '▶ Play';
+
+            if (isPlaying) {
+                playInterval = setInterval(() => {
+                    currentDay++;
+                    if (currentDay > 364) currentDay = 0;
+                    updateDate(currentDay);
+                }, 1000 / animationSpeed);
+            } else {
+                clearInterval(playInterval);
+            }
+        }
+
+        function resetSimulation() {
+            isPlaying = false;
+            clearInterval(playInterval);
+            document.getElementById('playBtn').textContent = '▶ Play';
+            updateDate(0);
+        }
+
+        function updateSpeed(value) {
+            animationSpeed = parseInt(value);
+            document.getElementById('speedDisplay').textContent = value + 'x';
+
+            if (isPlaying) {
+                clearInterval(playInterval);
+                playInterval = setInterval(() => {
+                    currentDay++;
+                    if (currentDay > 364) currentDay = 0;
+                    updateDate(currentDay);
+                }, 1000 / animationSpeed);
+            }
+        }
+
+        let lastTime = 0;
+        function animate(time) {
+            const delta = time - lastTime;
+            lastTime = time;
+
+            if (delta < 100) {
+                updateTrucks();
+                drawMap();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Tooltip handling
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const tooltip = document.getElementById('tooltip');
+
+            let found = false;
+
+            // Check STPs
+            Object.values(stps).forEach(stp => {
+                const pos = latLonToXY(stp.lat, stp.lon);
+                const dist = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);
+                if (dist < 15) {
+                    tooltip.querySelector('.tooltip-title').textContent = stp.name + ' STP';
+                    tooltip.querySelector('.tooltip-content').textContent =
+                        `Storage: ${Math.round(stp.storage)}t / ${stp.maxStorage}t\n` +
+                        `Capacity: ${((stp.storage / stp.maxStorage) * 100).toFixed(0)}%`;
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
+                    tooltip.classList.add('visible');
+                    found = true;
+                }
+            });
+
+            // Check farms
+            if (!found) {
+                Object.values(farms).forEach(farm => {
+                    const pos = latLonToXY(farm.lat, farm.lon);
+                    const dist = Math.sqrt((x - pos.x) ** 2 + (y - pos.y) ** 2);
+                    if (dist < 8) {
+                        tooltip.querySelector('.tooltip-title').textContent = farm.id;
+                        tooltip.querySelector('.tooltip-content').textContent =
+                            `Zone: ${farm.zone}\nArea: ${farm.area.toFixed(1)} ha`;
+                        tooltip.style.left = (e.clientX + 15) + 'px';
+                        tooltip.style.top = (e.clientY + 15) + 'px';
+                        tooltip.classList.add('visible');
+                        found = true;
+                    }
+                });
+            }
+
+            if (!found) {
+                tooltip.classList.remove('visible');
+            }
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            document.getElementById('tooltip').classList.remove('visible');
+        });
+
+        // Initialize
+        loadCSVData();
+    </script>
+</body>
+
+</html>
